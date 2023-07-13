@@ -14,29 +14,28 @@ from ultralytics.yolo.engine.predictor import BasePredictor
 from ultralytics.yolo.utils import DEFAULT_CONFIG, ROOT, ops
 from ultralytics.yolo.utils.checks import check_imgsz
 from ultralytics.yolo.utils.plotting import Annotator, colors, save_one_box
-
+import csv
 import cv2
 from deep_sort_pytorch.utils.parser import get_config
 from deep_sort_pytorch.deep_sort import DeepSort
 from collections import deque
 import numpy as np
-import csv
-# create a double ended queue
-# add cars when they enter frame. remove cars upon leaving frame
 palette = (2 ** 11 - 1, 2 ** 15 - 1, 2 ** 20 - 1)
 data_deque = {}
 
 deepsort = None
-
+# eastbound
 object_counter = {}
-
+# westbount 
 object_counter1 = {}
+# entering parkage
+object_counter2 = {}
+# leaving parkade
+object_counter3 = {}
 
-line = [[(100, 500), (1050, 500)], [(197, 510), (495, 335)]]
+out_path = "output_line1.csv"
 
-out_path = "output.csv"
-
-
+line = [[(778,1070), (1056,1163)], [(2500,1050), (3466,1156)], [(2300, 1500), (3170, 1224)]] 
 
 def init_tracker():
     # intialize tracker
@@ -227,20 +226,78 @@ def draw_boxes(img, bbox, names,object_id, identities=None, offset=(0, 0)):
         # add center to buffer
         data_deque[id].appendleft(center)
         if len(data_deque[id]) >= 2:
-          direction = get_direction(data_deque[id][0], data_deque[id][1])
-        #   intersect check for line 
-          if intersect(data_deque[id][0], data_deque[id][1], line[0][0], line[0][1]):
-              cv2.line(img, line[0][0], line[0][1], (255, 255, 255), 3)
-              if "South" in direction:
-                if obj_name not in object_counter:
-                    object_counter[obj_name] = 1
-                else:
-                    object_counter[obj_name] += 1
-              if "North" in direction:
-                if obj_name not in object_counter1:
-                    object_counter1[obj_name] = 1
-                else:
-                    object_counter1[obj_name] += 1
+            direction = get_direction(data_deque[id][0], data_deque[id][1])
+            #   intersect check for line 
+            #   do intersect for all elements within line[]
+            if intersect(data_deque[id][0], data_deque[id][1], line[0][0], line[0][1]):
+                cv2.line(img, line[0][0], line[0][1], (255, 255, 255), 3)
+                if "South" in direction and "West" in direction:
+                    if obj_name not in object_counter:
+                        object_counter[obj_name] = 1
+                    else:
+                        object_counter[obj_name] += 1
+                if "North" in direction and "East" in direction:
+                    if obj_name not in object_counter1:
+                        object_counter1[obj_name] = 1
+                    else:
+                        object_counter1[obj_name] += 1
+                if "South" in direction and "East" in direction:
+                    if obj_name not in object_counter2:
+                        object_counter2[obj_name] = 1
+                    else:
+                        object_counter2[obj_name] += 1
+                if "North" in direction and "West" in direction:
+                    if obj_name not in object_counter3:
+                        object_counter3[obj_name] = 1
+                    else:
+                        object_counter3[obj_name] += 1
+
+            if intersect(data_deque[id][0], data_deque[id][1], line[1][0], line[1][1]):
+                cv2.line(img, line[1][0], line[1][1], (255, 255, 255), 3)
+                if "South" in direction and "West" in direction:
+                    if obj_name not in object_counter:
+                        object_counter[obj_name] = 1
+                    else:
+                        object_counter[obj_name] += 1
+                if "North" in direction and "East" in direction:
+                    if obj_name not in object_counter1:
+                        object_counter1[obj_name] = 1
+                    else:
+                        object_counter1[obj_name] += 1
+                if "South" in direction and "East" in direction:
+                    if obj_name not in object_counter2:
+                        object_counter2[obj_name] = 1
+                    else:
+                        object_counter2[obj_name] += 1
+                if "North" in direction and "West" in direction:
+                    if obj_name not in object_counter3:
+                        object_counter3[obj_name] = 1
+                    else:
+                        object_counter3[obj_name] += 1
+
+            if intersect(data_deque[id][0], data_deque[id][1], line[2][0], line[2][1]):
+                cv2.line(img, line[2][0], line[2][1], (255, 255, 255), 3)
+                if "South" in direction and "West" in direction:
+                    if obj_name not in object_counter:
+                        object_counter[obj_name] = 1
+                    else:
+                        object_counter[obj_name] += 1
+                if "North" in direction and "East" in direction:
+                    if obj_name not in object_counter1:
+                        object_counter1[obj_name] = 1
+                    else:
+                        object_counter1[obj_name] += 1
+                if "South" in direction and "East" in direction:
+                    if obj_name not in object_counter2:
+                        object_counter2[obj_name] = 1
+                    else:
+                        object_counter2[obj_name] += 1
+                if "North" in direction and "West" in direction:
+                    if obj_name not in object_counter3:
+                        object_counter3[obj_name] = 1
+                    else:
+                        object_counter3[obj_name] += 1
+        
         UI_box(box, img, label=label, color=color, line_thickness=2)
         # draw trail
         for i in range(1, len(data_deque[id])):
@@ -273,6 +330,7 @@ def draw_boxes(img, bbox, names,object_id, identities=None, offset=(0, 0)):
             cv2.putText(img, cnt_str1, (11, 75+ (idx*40)), 0, 1, [225, 255, 255], thickness=2, lineType=cv2.LINE_AA)
 
         
+
 
     return img
 
@@ -327,7 +385,7 @@ class DetectionPredictor(BasePredictor):
             return log_string
         for c in det[:, 5].unique():
             n = (det[:, 5] == c).sum()  # detections per class
-            log_string += f"{n} {self.model.names[int(c)]}{'s' * (n > 1)}, "
+            # log_string += f"{n} {self.model.names[int(c)]}{'s' * (n > 1)}, "
         # write
         gn = torch.tensor(im0.shape)[[1, 0, 1, 0]]  # normalization gain whwh
         xywh_bboxs = []
@@ -352,8 +410,7 @@ class DetectionPredictor(BasePredictor):
             draw_boxes(im0, bbox_xyxy, self.model.names, object_id,identities)
 
         return log_string
-
-
+    
 def write_to_csv():
 
     north_southbound = [["North to Southbound"]]
@@ -399,4 +456,3 @@ def predict(cfg):
 
 if __name__ == "__main__":
     predict()
-    write_to_csv()

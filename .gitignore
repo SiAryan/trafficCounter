@@ -148,3 +148,5 @@ wandb/
 *_saved_model/
 *_web_model/
 *_openvino_model/
+**/deep_sort_pytorch
+**/*.mp4
