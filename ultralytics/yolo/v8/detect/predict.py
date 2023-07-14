@@ -37,6 +37,33 @@ out_path = "output.csv"
 
 line = [[(100, 500), (1050, 500)],[(100, 500), (1050, 500)], [(100, 500), (1050, 500)]] 
 
+# route A:
+    # route_a_line1
+    # route_a_ilne2
+
+
+# route B:
+    # route_b_line1
+    # route_b_ilne2
+
+# route C:
+    # route_c_line1
+    # route_c_ilne2
+
+# route D:
+    # route_d_line1
+    # route_d_ilne2
+
+# route E:
+    # route_e_line1
+    # route_e_line2
+
+    
+
+
+
+# create line pairs 
+
 def init_tracker():
     # intialize tracker
     global deepsort
@@ -49,6 +76,9 @@ def init_tracker():
                             max_age=cfg_deep.DEEPSORT.MAX_AGE, n_init=cfg_deep.DEEPSORT.N_INIT, nn_budget=cfg_deep.DEEPSORT.NN_BUDGET,
                             use_cuda=True)
 ##########################################################################################
+
+
+
 def xyxy_to_xywh(*xyxy):
     """"
         Calculates the relative bounding box from absolute pixel values.
@@ -240,6 +270,7 @@ def draw_boxes(dt, img, bbox, names,object_id, identities=None, offset=(0, 0)):
                     object_counter1[obj_name] = 1
                 else:
                     object_counter1[obj_name] += 1
+            
             #   intersect check for line 
             #   do intersect for all elements within line[]
             # if intersect(data_deque[id][0], data_deque[id][1], line[0][0], line[0][1]):
@@ -435,7 +466,7 @@ class DetectionPredictor(BasePredictor):
             identities = outputs[:, -2]
             object_id = outputs[:, -1]
 
-            draw_boxes(self.dt, im0, bbox_xyxy, self.model.names, object_id,identities)
+            draw_boxes(self.dt[1].dt, im0, bbox_xyxy, self.model.names, object_id,identities)
 
         return log_string
     

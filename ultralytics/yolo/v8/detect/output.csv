@@ -1,6 +1,12 @@
-North to Southbound
-truck,6
-car,7
-South to Northbound
-car,14
-truck,1
+EBT
+cr,1
+mt,1
+bc,1
+cc,1
+tt,1
+bb,1
+EBR
+WBT
+WBL
+NBL
+NBR
