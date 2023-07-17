@@ -26,6 +26,7 @@ palette = (2 ** 11 - 1, 2 ** 15 - 1, 2 ** 20 - 1)
 data_deque = {}
 
 deepsort = None
+
 # eastbound
 EBT_counter = {}
 # westbount 
@@ -223,7 +224,7 @@ def draw_boxes(frame, img, bbox, names,object_id, identities=None, offset=(0, 0)
     """
     for i in line:
 
-        cv2.line(img, i[0], i[1], (46,162,112), 3)
+        cv2.line(img, i[0], i[1], (0,0,255), 3)
 
     height, width, _ = img.shape
     # remove tracked point from buffer if object is lost
@@ -338,7 +339,7 @@ def draw_boxes(frame, img, bbox, names,object_id, identities=None, offset=(0, 0)
             # generate dynamic thickness of trails
             thickness = int(np.sqrt(64 / float(i + i)) * 1.5)
             # draw trails
-            cv2.line(img, data_deque[id][i - 1], data_deque[id][i], color, thickness)
+            # cv2.line(img, data_deque[id][i - 1], data_deque[id][i], color, thickness)
 
         #add to output 
 
@@ -383,11 +384,28 @@ def draw_boxes(frame, img, bbox, names,object_id, identities=None, offset=(0, 0)
         # print(WBT_counter)
         # print("Westbound: " + str(initial_direction['WB']))
         # print(final_direction)
-    if (frame%100 == 0):
-        write_to_csv(frame)
-    elif(frame >= 15850):
-        write_to_csv(frame)
 
+
+
+        
+    if (frame%(1800) == 0):
+        write_to_csv(frame)
+        # EBT_counter = {}
+        # # westbount 
+        # EBR_counter = {}
+        # # entering parkage
+        # WBT_counter = {}
+        # # leaving parkade
+        # WBL_counter = {}
+
+        # NBL_counter = {}
+        # # leaving parkade
+        # NBR_counter = {}
+        # # reset all the counters
+
+    elif(frame >= 15900):
+        write_to_csv(frame)
+    
     return img
 
 
@@ -468,7 +486,7 @@ class DetectionPredictor(BasePredictor):
         return log_string
     
 def write_to_csv(frame):
-    delimiter_line = [('frame: %s' + '-' * 50)%frame]
+    delimiter_line = [('minute: %s' + '-' * 50)%(frame*(1/30)/60)]
     delimiter_line2 = [('-' * 60)]
 
     ebt = [["EBT"]]
