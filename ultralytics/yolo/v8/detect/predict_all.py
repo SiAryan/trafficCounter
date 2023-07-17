@@ -27,17 +27,17 @@ data_deque = {}
 
 deepsort = None
 # eastbound
-EBT_counter = {'cr':1}
+EBT_counter = {}
 # westbount 
-EBR_counter = {'mt':1}
+EBR_counter = {}
 # entering parkage
-WBT_counter = {'bc':1}
+WBT_counter = {}
 # leaving parkade
-WBL_counter = {'cc':1}
+WBL_counter = {}
 
-NBL_counter = {'bb':1}
+NBL_counter = {}
 # leaving parkade
-NBR_counter = {'tt':1}
+NBR_counter = {}
 
 out_path = "output.csv"
 
@@ -261,7 +261,7 @@ def draw_boxes(frame, img, bbox, names,object_id, identities=None, offset=(0, 0)
                 cv2.line(img, line[0][0], line[0][1], (255, 255, 255), 3)
                 if "North" in direction and "East" in direction:
                     initial_direction['EB'].append(id)
-                    initial_direction['EB_frame'].append(frame)
+                    initial_direction['EB_frame'].append(int(frame/30))
                 elif "South" in direction and "West" in direction:
                     if id in initial_direction['WB']:
                         # EB
@@ -383,7 +383,10 @@ def draw_boxes(frame, img, bbox, names,object_id, identities=None, offset=(0, 0)
         # print(WBT_counter)
         # print("Westbound: " + str(initial_direction['WB']))
         # print(final_direction)
-
+    if (frame%100 == 0):
+        write_to_csv(frame)
+    elif(frame >= 15850):
+        write_to_csv(frame)
 
     return img
 
@@ -464,7 +467,10 @@ class DetectionPredictor(BasePredictor):
 
         return log_string
     
-def write_to_csv():
+def write_to_csv(frame):
+    delimiter_line = [('frame: %s' + '-' * 50)%frame]
+    delimiter_line2 = [('-' * 60)]
+
     ebt = [["EBT"]]
     ebr = [["EBR"]]
     wbt = [["WBT"]]
@@ -472,37 +478,34 @@ def write_to_csv():
     nbl = [["NBL"]]
     nbr = [["NBR"]]
     for idx, (key, value) in enumerate(EBT_counter.items()):
-        print(idx, (key, value))
+        # print(idx, (key, value))
         ebt.append([key, value])
     for idx, (key, value) in enumerate(EBR_counter.items()):
-        print(idx, (key, value))
+        # print(idx, (key, value))
         ebr.append([key, value])
     for idx, (key, value) in enumerate(WBT_counter.items()):
-        print(idx, (key, value))
+        # print(idx, (key, value))
         wbt.append([key, value])
     for idx, (key, value) in enumerate(WBL_counter.items()):
-        print(idx, (key, value))
+        # print(idx, (key, value))
         wbl.append([key, value])
     for idx, (key, value) in enumerate(NBR_counter.items()):
-        print(idx, (key, value))
+        # print(idx, (key, value))
         nbr.append([key, value])
     for idx, (key, value) in enumerate(NBL_counter.items()):
-        print(idx, (key, value))
+        # print(idx, (key, value))
         nbl.append([key, value])
-    with open(out_path, mode='w', newline='') as file:
+    with open(out_path, mode='a', newline='') as file:
         writer = csv.writer(file)
+        writer.writerow(delimiter_line)
         writer.writerows(ebt)
         writer.writerows(ebr)
         writer.writerows(wbt)
         writer.writerows(wbl)
         writer.writerows(nbl)
         writer.writerows(nbr)
-        # writer.writerows(initial_direction['EB'])
-        # writer.writerows(initial_direction['EB_frame'])
-        # writer.writerows(initial_direction['NB'])
-        # writer.writerows(initial_direction['NB_frame'])
-        # writer.writerows(initial_direction['WB'])
-        # writer.writerows(initial_direction['WB_frame'])
+        writer.writerow(delimiter_line2)
+
 
     return
 
@@ -519,4 +522,4 @@ def predict(cfg):
 
 if __name__ == "__main__":
     predict()
-    write_to_csv()
+    # write_to_csv()
