@@ -40,6 +40,8 @@ NBL_counter = {}
 # leaving parkade
 NBR_counter = {}
 
+ALL_counter = {}
+
 out_path = "output.csv"
 
 initial_direction = {
@@ -60,7 +62,7 @@ final_direction = {
     'NBR': [],
 }
 
-
+testfile = "test.csv"
 
 
 
@@ -390,20 +392,28 @@ def draw_boxes(frame, img, bbox, names,object_id, identities=None, offset=(0, 0)
         
     if (frame%(1800) == 0):
         write_to_csv(frame)
-        # EBT_counter = {}
-        # # westbount 
-        # EBR_counter = {}
-        # # entering parkage
-        # WBT_counter = {}
-        # # leaving parkade
-        # WBL_counter = {}
+        
+        
+        for key in EBT_counter:
+            EBT_counter[key] = 0
+        
+        for key in EBR_counter:
+            EBT_counter[key] = 0
+        
+        for key in WBT_counter:
+            WBT_counter[key] = 0
 
-        # NBL_counter = {}
-        # # leaving parkade
-        # NBR_counter = {}
-        # # reset all the counters
+        for key in WBL_counter:
+            WBL_counter[key] = 0
 
-    elif(frame >= 15900):
+        for key in NBL_counter:
+            NBL_counter[key] = 0
+
+        for key in NBR_counter:
+            NBR_counter[key] = 0
+
+
+    elif(frame >= 15910):
         write_to_csv(frame)
     
     return img
@@ -486,43 +496,219 @@ class DetectionPredictor(BasePredictor):
         return log_string
     
 def write_to_csv(frame):
+    # testfile = "test.csv"
     delimiter_line = [('minute: %s' + '-' * 50)%(frame*(1/30)/60)]
     delimiter_line2 = [('-' * 60)]
+    
 
-    ebt = [["EBT"]]
-    ebr = [["EBR"]]
-    wbt = [["WBT"]]
-    wbl = [["WBL"]]
-    nbl = [["NBL"]]
-    nbr = [["NBR"]]
-    for idx, (key, value) in enumerate(EBT_counter.items()):
-        # print(idx, (key, value))
-        ebt.append([key, value])
-    for idx, (key, value) in enumerate(EBR_counter.items()):
-        # print(idx, (key, value))
-        ebr.append([key, value])
-    for idx, (key, value) in enumerate(WBT_counter.items()):
-        # print(idx, (key, value))
-        wbt.append([key, value])
-    for idx, (key, value) in enumerate(WBL_counter.items()):
-        # print(idx, (key, value))
-        wbl.append([key, value])
-    for idx, (key, value) in enumerate(NBR_counter.items()):
-        # print(idx, (key, value))
-        nbr.append([key, value])
-    for idx, (key, value) in enumerate(NBL_counter.items()):
-        # print(idx, (key, value))
-        nbl.append([key, value])
-    with open(out_path, mode='a', newline='') as file:
+
+
+    # EBT
+
+    if "car" in EBT_counter:
+        ebt_c = EBT_counter["car"]
+    else:
+        ebt_c = 0
+    if "truck" in EBT_counter:
+        ebt_t = EBT_counter["truck"]
+    else: 
+        ebt_t = 0
+    if "bus" in EBT_counter:
+        ebt_bu = EBT_counter["bus"]
+    else: 
+        ebt_bu = 0
+    if "bicycle" in EBT_counter:
+        ebt_bi = EBT_counter["bicycle"]
+    else:
+        ebt_bi = 0
+    if "person" in EBT_counter:
+        ebt_p = EBT_counter["person"]
+    else:
+        ebt_p = 0
+    if "motorcycle" in EBT_counter:
+        ebt_m = EBT_counter["motorcycle"]
+    else:
+        ebt_m = 0 
+    
+    # EBR
+    if "car" in EBR_counter:
+        ebr_c = EBR_counter["car"]
+    else:
+        ebr_c = 0
+    if "truck" in EBR_counter:
+        ebr_t = EBR_counter["truck"]
+    else: 
+        ebr_t = 0
+    if "bus" in EBR_counter:
+        ebr_bu = EBR_counter["bus"]
+    else: 
+        ebr_bu = 0
+    if "bicycle" in EBR_counter:
+        ebr_bi = EBR_counter["bicycle"]
+    else:
+        ebr_bi = 0
+    if "person" in EBR_counter:
+        ebr_p = EBR_counter["person"]
+    else:
+        ebr_p = 0
+    if "motorcycle" in EBR_counter:
+        ebr_m = EBR_counter["motorcycle"]
+    else:
+        ebr_m = 0
+
+    # WBT
+
+    if "car" in WBT_counter:
+        wbt_c = WBT_counter["car"]
+    else:
+        wbt_c = 0
+    if "truck" in WBT_counter:
+        wbt_t = WBT_counter["truck"]
+    else: 
+        wbt_t = 0
+    if "bus" in WBT_counter:
+        wbt_bu = WBT_counter["bus"]
+    else: 
+        wbt_bu = 0
+    if "bicycle" in WBT_counter:
+        wbt_bi = WBT_counter["bicycle"]
+    else:
+        wbt_bi = 0
+    if "person" in WBT_counter:
+        wbt_p = WBT_counter["person"]
+    else:
+        wbt_p = 0
+    if "motorcycle" in WBT_counter:
+        wbt_m = WBT_counter["motorcycle"]
+    else:
+        wbt_m = 0
+
+
+    # WBL
+
+    if "car" in WBL_counter:
+        wbl_c = WBL_counter["car"]
+    else:
+        wbl_c = 0
+    if "truck" in WBL_counter:
+        wbl_t = WBL_counter["truck"]
+    else: 
+        wbl_t = 0
+    if "bus" in WBL_counter:
+        wbl_bu = WBL_counter["bus"]
+    else: 
+        wbl_bu = 0
+    if "bicycle" in WBL_counter:
+        wbl_bi = WBL_counter["bicycle"]
+    else:
+        wbl_bi = 0
+    if "person" in WBL_counter:
+        wbl_p = WBL_counter["person"]
+    else:
+        wbl_p = 0
+    if "motorcycle" in WBL_counter:
+        wbl_m = WBL_counter["motorcycle"]
+    else:
+        wbl_m = 0
+
+
+    # NBL
+
+    if "car" in NBL_counter:
+        nbl_c = NBL_counter["car"]
+    else:
+        nbl_c = 0
+    if "truck" in NBL_counter:
+        nbl_t = NBL_counter["truck"]
+    else: 
+        nbl_t = 0
+    if "bus" in NBL_counter:
+        nbl_bu = NBL_counter["bus"]
+    else: 
+        nbl_bu = 0
+    if "bicycle" in NBL_counter:
+        nbl_bi = NBL_counter["bicycle"]
+    else:
+        nbl_bi = 0
+    if "person" in NBL_counter:
+        nbl_p = NBL_counter["person"]
+    else:
+        nbl_p = 0
+    if "motorcycle" in NBL_counter:
+        nbl_m = NBL_counter["motorcycle"]
+    else:
+        nbl_m = 0
+
+    # NBR
+
+    if "car" in NBR_counter:
+        nbr_c = NBR_counter["car"]
+    else:
+        nbr_c = 0
+    if "truck" in NBR_counter:
+        nbr_t = NBR_counter["truck"]
+    else: 
+        nbr_t = 0
+    if "bus" in NBR_counter:
+        nbr_bu = NBR_counter["bus"]
+    else: 
+        nbr_bu = 0
+    if "bicycle" in NBR_counter:
+        nbr_bi = NBR_counter["bicycle"]
+    else:
+        nbr_bi = 0
+    if "person" in NBR_counter:
+        nbr_p = NBR_counter["person"]
+    else:
+        nbr_p = 0
+    if "motorcycle" in NBR_counter:
+        nbr_m = NBR_counter["motorcycle"]
+    else:
+        nbr_m = 0
+
+
+
+    row = [(frame*(1/30)/60),ebt_c, ebt_bu, ebt_t, ebt_bi, ebt_m, ebt_p, ebr_c, ebr_bu, ebr_t, ebr_bi, ebr_m, ebr_p, wbt_c, wbt_bu, wbt_t, wbt_bi, wbt_m, wbt_p, wbl_c, wbl_bu, wbl_t, wbl_bi, wbl_m, wbl_p, nbl_c, nbl_bu, nbl_t, nbl_bi, nbl_m, nbl_p, nbr_c, nbr_bu, nbr_t, nbr_bi, nbr_m, nbr_p]
+    with open(testfile, mode='a', newline='') as file:
         writer = csv.writer(file)
-        writer.writerow(delimiter_line)
-        writer.writerows(ebt)
-        writer.writerows(ebr)
-        writer.writerows(wbt)
-        writer.writerows(wbl)
-        writer.writerows(nbl)
-        writer.writerows(nbr)
-        writer.writerow(delimiter_line2)
+        writer.writerow(row)
+    # time, EBT_C, EBT_Bu, EBT_T, EBT_Bi, EBT_M, EBT_P, EBR_C, EBR_Bu, EBR_T, EBR_Bi, EBR_M, EBR_P, WBT_C, WBT_Bu, WBT_T, WBT_Bi, WBT_M, WBT_P, WBL_C, WBL_Bu, WBL_T, WBL_Bi, WBL_M, WBL_P, NBL_C, NBL_Bu, NBL_T, NBL_Bi, NBL_M, NBL_P
+    # row = "time_minute,EBT_C,EBT_Bu,EBT_T,EBT_Bi,EBT_M,EBT_P,EBR_C,EBR_Bu,EBR_T,EBR_Bi,EBR_M,EBR_P,WBT_C,WBT_Bu,WBT_T,WBT_Bi,WBT_M,WBT_P,WBL_C,WBL_Bu,WBL_T,WBL_Bi,WBL_M,WBL_P,NBL_C,NBL_Bu,NBL_T,NBL_Bi,NBL_M,NBL_P"
+    # row = row.split(',')
+    # with open(testfile, mode='a', newline='') as file:
+    #     writer = csv.writer(file)
+    #     writer.writerow(row)
+    
+
+
+    # for idx, (key, value) in enumerate(EBR_counter.items()):
+    #     # print(idx, (key, value))
+    #     ebt.append([key, value])
+    # for idx, (key, value) in enumerate(EBR_counter.items()):
+    #     # print(idx, (key, value))
+    #     ebr.append([key, value])
+    # for idx, (key, value) in enumerate(WBT_counter.items()):
+    #     # print(idx, (key, value))
+    #     wbt.append([key, value])
+    # for idx, (key, value) in enumerate(WBL_counter.items()):
+    #     # print(idx, (key, value))
+    #     wbl.append([key, value])
+    # for idx, (key, value) in enumerate(NBR_counter.items()):
+    #     # print(idx, (key, value))
+    #     nbr.append([key, value])
+    # for idx, (key, value) in enumerate(NBL_counter.items()):
+    #     # print(idx, (key, value))
+    #     nbl.append([key, value])
+    # with open(out_path, mode='a', newline='') as file:
+    #     writer = csv.writer(file)
+    #     writer.writerow(delimiter_line)
+    #     writer.writerows(ebt)
+    #     writer.writerows(ebr)
+    #     writer.writerows(wbt)
+    #     writer.writerows(wbl)
+    #     writer.writerows(nbl)
+    #     writer.writerows(nbr)
+    #     writer.writerow(delimiter_line2)
 
 
     return
@@ -539,5 +725,10 @@ def predict(cfg):
 
 
 if __name__ == "__main__":
+    row = "time_minute,EBT_C,EBT_Bu,EBT_T,EBT_Bi,EBT_M,EBT_P,EBR_C,EBR_Bu,EBR_T,EBR_Bi,EBR_M,EBR_P,WBT_C,WBT_Bu,WBT_T,WBT_Bi,WBT_M,WBT_P,WBL_C,WBL_Bu,WBL_T,WBL_Bi,WBL_M,WBL_P,NBL_C,NBL_Bu,NBL_T,NBL_Bi,NBL_M,NBL_P,NBR_C,NBR_Bu,NBR_T,NBR_Bi,NBR_M,NBR_P"
+    row = row.split(',')
+    with open(testfile, mode='w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(row)
     predict()
     # write_to_csv()
