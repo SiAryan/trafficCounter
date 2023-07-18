@@ -5,7 +5,7 @@ import torch
 import argparse
 import time
 from pathlib import Path
-
+import sys
 import cv2
 import torch
 import torch.backends.cudnn as cudnn
@@ -62,11 +62,13 @@ final_direction = {
     'NBR': [],
 }
 
-testfile = "test.csv"
+testfile = None
 
+# lines for west entrance:
+line = [[(580,1070), (1613,1975)], [(1884,1005), (3830,1360)], [(2550, 1720), (3831, 1341)]] 
 
-
-line = [[(580,1070), (1613,1975)], [(1884,1005), (3730,1163)], [(2300, 1500), (3170, 1224)]] 
+# make a 4 directional line array 
+# line = [[(580,1070), (1613,1975)], [(1884,1005), (3730,1163)], [(2300, 1500), (3170, 1224)]] 
 
 def init_tracker():
     # intialize tracker
@@ -377,19 +379,8 @@ def draw_boxes(frame, img, bbox, names,object_id, identities=None, offset=(0, 0)
         #     cv2.line(img, (20,65+ (idx*40)), (127,65+ (idx*40)), [85,45,255], 30)
         #     cv2.putText(img, cnt_str1, (11, 75+ (idx*40)), 0, 1, [225, 255, 255], thickness=2, lineType=cv2.LINE_AA)
 
-
-        # print(EBR_counter)
-        # print(EBT_counter)
-        # print(NBL_counter)
-        # print(NBR_counter)
-        # print(WBL_counter)
-        # print(WBT_counter)
-        # print("Westbound: " + str(initial_direction['WB']))
-        # print(final_direction)
-
-
-
         
+                
     if (frame%(1800) == 0):
         write_to_csv(frame)
         
@@ -413,8 +404,8 @@ def draw_boxes(frame, img, bbox, names,object_id, identities=None, offset=(0, 0)
             NBR_counter[key] = 0
 
 
-    elif(frame >= 15910):
-        write_to_csv(frame)
+    # elif(frame >= 15910):
+    #     write_to_csv(frame)
     
     return img
 
@@ -672,43 +663,7 @@ def write_to_csv(frame):
     with open(testfile, mode='a', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(row)
-    # time, EBT_C, EBT_Bu, EBT_T, EBT_Bi, EBT_M, EBT_P, EBR_C, EBR_Bu, EBR_T, EBR_Bi, EBR_M, EBR_P, WBT_C, WBT_Bu, WBT_T, WBT_Bi, WBT_M, WBT_P, WBL_C, WBL_Bu, WBL_T, WBL_Bi, WBL_M, WBL_P, NBL_C, NBL_Bu, NBL_T, NBL_Bi, NBL_M, NBL_P
-    # row = "time_minute,EBT_C,EBT_Bu,EBT_T,EBT_Bi,EBT_M,EBT_P,EBR_C,EBR_Bu,EBR_T,EBR_Bi,EBR_M,EBR_P,WBT_C,WBT_Bu,WBT_T,WBT_Bi,WBT_M,WBT_P,WBL_C,WBL_Bu,WBL_T,WBL_Bi,WBL_M,WBL_P,NBL_C,NBL_Bu,NBL_T,NBL_Bi,NBL_M,NBL_P"
-    # row = row.split(',')
-    # with open(testfile, mode='a', newline='') as file:
-    #     writer = csv.writer(file)
-    #     writer.writerow(row)
-    
 
-
-    # for idx, (key, value) in enumerate(EBR_counter.items()):
-    #     # print(idx, (key, value))
-    #     ebt.append([key, value])
-    # for idx, (key, value) in enumerate(EBR_counter.items()):
-    #     # print(idx, (key, value))
-    #     ebr.append([key, value])
-    # for idx, (key, value) in enumerate(WBT_counter.items()):
-    #     # print(idx, (key, value))
-    #     wbt.append([key, value])
-    # for idx, (key, value) in enumerate(WBL_counter.items()):
-    #     # print(idx, (key, value))
-    #     wbl.append([key, value])
-    # for idx, (key, value) in enumerate(NBR_counter.items()):
-    #     # print(idx, (key, value))
-    #     nbr.append([key, value])
-    # for idx, (key, value) in enumerate(NBL_counter.items()):
-    #     # print(idx, (key, value))
-    #     nbl.append([key, value])
-    # with open(out_path, mode='a', newline='') as file:
-    #     writer = csv.writer(file)
-    #     writer.writerow(delimiter_line)
-    #     writer.writerows(ebt)
-    #     writer.writerows(ebr)
-    #     writer.writerows(wbt)
-    #     writer.writerows(wbl)
-    #     writer.writerows(nbl)
-    #     writer.writerows(nbr)
-    #     writer.writerow(delimiter_line2)
 
 
     return
@@ -727,6 +682,7 @@ def predict(cfg):
 if __name__ == "__main__":
     row = "time_minute,EBT_C,EBT_Bu,EBT_T,EBT_Bi,EBT_M,EBT_P,EBR_C,EBR_Bu,EBR_T,EBR_Bi,EBR_M,EBR_P,WBT_C,WBT_Bu,WBT_T,WBT_Bi,WBT_M,WBT_P,WBL_C,WBL_Bu,WBL_T,WBL_Bi,WBL_M,WBL_P,NBL_C,NBL_Bu,NBL_T,NBL_Bi,NBL_M,NBL_P,NBR_C,NBR_Bu,NBR_T,NBR_Bi,NBR_M,NBR_P"
     row = row.split(',')
+    testfile = sys.argv[2][7:-4]+".csv"
     with open(testfile, mode='w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(row)
