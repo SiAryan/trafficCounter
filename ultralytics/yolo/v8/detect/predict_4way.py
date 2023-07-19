@@ -133,7 +133,7 @@ def check_route(id, direction, data_deque_item, img, obj_name):
                         all_Counter["South"][obj_name] += 1
                     # # check initial direction
                     if id in initial_direction["North"]:
-                        print("found route")
+                        # print("found route")
                         if obj_name not in SBT_counter:
                             SBT_counter[obj_name] = 1
                         else:
@@ -164,7 +164,7 @@ def check_route(id, direction, data_deque_item, img, obj_name):
                     all_Counter["West"][obj_name] += 1
                 # # check initial direction
                 if id in initial_direction["East"]:
-                    print("found route")
+                    # print("found route")
                     if obj_name not in WBT_counter:
                         WBT_counter[obj_name] = 1
                     else:
@@ -194,7 +194,7 @@ def check_route(id, direction, data_deque_item, img, obj_name):
                     all_Counter["East"][obj_name] += 1
                 # # check initial direction
                 if id in initial_direction["West"]:
-                    print("found route")
+                    # print("found route")
                     if obj_name not in EBT_counter:
                         EBT_counter[obj_name] = 1
                     else:
@@ -444,21 +444,21 @@ def draw_boxes(frame, img, bbox, names,object_id, identities=None, offset=(0, 0)
         #     cv2.putText(img, cnt_str1, (11, 75+ (idx*40)), 0, 1, [225, 255, 255], thickness=2, lineType=cv2.LINE_AA)
 
 
-    print(all_Counter)
-    print([
-        EBT_counter,
-        EBL_counter,
-        EBR_counter,
-        WBT_counter,
-        WBL_counter,
-        WBR_counter,
-        NBT_counter,
-        NBL_counter,
-        NBR_counter,
-        SBT_counter,
-        SBL_counter,
-        SBR_counter
-    ])
+    # print(all_Counter)
+    # print([
+    #     EBT_counter,
+    #     EBL_counter,
+    #     EBR_counter,
+    #     WBT_counter,
+    #     WBL_counter,
+    #     WBR_counter,
+    #     NBT_counter,
+    #     NBL_counter,
+    #     NBR_counter,
+    #     SBT_counter,
+    #     SBL_counter,
+    #     SBR_counter
+    # ])
 
     if (frame%(1800) == 0):
         write_to_csv(frame)
