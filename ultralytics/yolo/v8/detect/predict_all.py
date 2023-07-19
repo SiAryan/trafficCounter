@@ -384,7 +384,6 @@ def draw_boxes(frame, img, bbox, names,object_id, identities=None, offset=(0, 0)
     if (frame%(1800) == 0):
         write_to_csv(frame)
         
-        
         for key in EBT_counter:
             EBT_counter[key] = 0
         
