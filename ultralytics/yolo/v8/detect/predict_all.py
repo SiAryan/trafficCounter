@@ -378,7 +378,7 @@ def draw_boxes(frame, img, bbox, names,object_id, identities=None, offset=(0, 0)
         #     cv2.putText(img, f'Numbers of Vehicles Leaving', (11, 35), 0, 1, [225, 255, 255], thickness=2, lineType=cv2.LINE_AA)    
         #     cv2.line(img, (20,65+ (idx*40)), (127,65+ (idx*40)), [85,45,255], 30)
         #     cv2.putText(img, cnt_str1, (11, 75+ (idx*40)), 0, 1, [225, 255, 255], thickness=2, lineType=cv2.LINE_AA)
-    
+
         
                 
     if (frame%(1800) == 0):

@@ -7,7 +7,7 @@ screen_width = user32.GetSystemMetrics(0)
 screen_height = user32.GetSystemMetrics(1)
 
 # Load the image
-image_path = "frame.jpg"
+image_path = "GH016397_frame.jpg"
 image = cv2.imread(image_path)
 
 # Calculate the new size while maintaining the aspect ratio

@@ -28,10 +28,10 @@ deepsort = None
 
 
 
-north_line = [(235, 477), (954, 459)]
-west_line = [(185,470), (155,587)]
-east_line = [(1101,461), (1525, 479)]
-south_line = [(459,756), (1600, 477)]
+west_line = [(70, 1042), (2087, 1425)]
+east_line = [(1718,975), (3053,989)]
+south_line = [(3111,998), (2826, 1285)]
+north_line = [(475,1045), (1260, 991)]
 
 
 
@@ -444,21 +444,21 @@ def draw_boxes(frame, img, bbox, names,object_id, identities=None, offset=(0, 0)
         #     cv2.putText(img, cnt_str1, (11, 75+ (idx*40)), 0, 1, [225, 255, 255], thickness=2, lineType=cv2.LINE_AA)
 
 
-    # print(all_Counter)
-    # print([
-    #     EBT_counter,
-    #     EBL_counter,
-    #     EBR_counter,
-    #     WBT_counter,
-    #     WBL_counter,
-    #     WBR_counter,
-    #     NBT_counter,
-    #     NBL_counter,
-    #     NBR_counter,
-    #     SBT_counter,
-    #     SBL_counter,
-    #     SBR_counter
-    # ])
+    print(all_Counter)
+    print([
+        EBT_counter,
+        EBL_counter,
+        EBR_counter,
+        WBT_counter,
+        WBL_counter,
+        WBR_counter,
+        NBT_counter,
+        NBL_counter,
+        NBR_counter,
+        SBT_counter,
+        SBL_counter,
+        SBR_counter
+    ])
 
     if (frame%(1800) == 0):
         write_to_csv(frame)
