@@ -575,7 +575,8 @@ class DetectionPredictor(BasePredictor):
     
 def write_to_csv(frame):
     # testfile = "test.csv"
-    classes = ["Car", "Bus", "Truck", "Bicycle", "Motorcycle", "Person"]
+    classes = ["car", "bus", "truck", "bicycle", "motorcycle", "person"]
+    directions = ["North", "South", "West", "East"]
     routes = [EBT_counter, EBL_counter, EBR_counter, WBT_counter, WBL_counter, WBR_counter, NBT_counter, NBL_counter, NBR_counter, SBT_counter, SBL_counter, SBR_counter]
     row = [(frame*(1/30)/60)]
     for route in routes:
@@ -585,245 +586,13 @@ def write_to_csv(frame):
             else:
                 row.append(0)
         
-    # EBT
+    for direction in directions:
 
-    # if "car" in EBT_counter:
-    #     ebt_c = EBT_counter["car"]
-    # else:
-    #     ebt_c = 0
-    # if "truck" in EBT_counter:
-    #     ebt_t = EBT_counter["truck"]
-    # else: 
-    #     ebt_t = 0
-    # if "bus" in EBT_counter:
-    #     ebt_bu = EBT_counter["bus"]
-    # else: 
-    #     ebt_bu = 0
-    # if "bicycle" in EBT_counter:
-    #     ebt_bi = EBT_counter["bicycle"]
-    # else:
-    #     ebt_bi = 0
-    # if "person" in EBT_counter:
-    #     ebt_p = EBT_counter["person"]
-    # else:
-    #     ebt_p = 0
-    # if "motorcycle" in EBT_counter:
-    #     ebt_m = EBT_counter["motorcycle"]
-    # else:
-    #     ebt_m = 0 
-    
-    # # EBR
-    # if "car" in EBR_counter:
-    #     ebr_c = EBR_counter["car"]
-    # else:
-    #     ebr_c = 0
-    # if "truck" in EBR_counter:
-    #     ebr_t = EBR_counter["truck"]
-    # else: 
-    #     ebr_t = 0
-    # if "bus" in EBR_counter:
-    #     ebr_bu = EBR_counter["bus"]
-    # else: 
-    #     ebr_bu = 0
-    # if "bicycle" in EBR_counter:
-    #     ebr_bi = EBR_counter["bicycle"]
-    # else:
-    #     ebr_bi = 0
-    # if "person" in EBR_counter:
-    #     ebr_p = EBR_counter["person"]
-    # else:
-    #     ebr_p = 0
-    # if "motorcycle" in EBR_counter:
-    #     ebr_m = EBR_counter["motorcycle"]
-    # else:
-    #     ebr_m = 0
-
-    # if "car" in EBL_counter:
-    #     ebl_c = EBL_counter["car"]
-    # else:
-    #     ebl_c = 0
-    # if "truck" in EBL_counter:
-    #     ebl_t = EBL_counter["truck"]
-    # else: 
-    #     ebl_t = 0
-    # if "bus" in EBL_counter:
-    #     ebl_bu = EBL_counter["bus"]
-    # else: 
-    #     ebl_bu = 0
-    # if "bicycle" in EBL_counter:
-    #     ebl_bi = EBL_counter["bicycle"]
-    # else:
-    #     ebl_bi = 0
-    # if "person" in EBL_counter:
-    #     ebl_p = EBL_counter["person"]
-    # else:
-    #     ebl_p = 0
-    # if "motorcycle" in EBL_counter:
-    #     ebl_m = EBL_counter["motorcycle"]
-    # else:
-    #     ebl_m = 0
-
-    # # WBT
-
-    # if "car" in WBT_counter:
-    #     wbt_c = WBT_counter["car"]
-    # else:
-    #     wbt_c = 0
-    # if "truck" in WBT_counter:
-    #     wbt_t = WBT_counter["truck"]
-    # else: 
-    #     wbt_t = 0
-    # if "bus" in WBT_counter:
-    #     wbt_bu = WBT_counter["bus"]
-    # else: 
-    #     wbt_bu = 0
-    # if "bicycle" in WBT_counter:
-    #     wbt_bi = WBT_counter["bicycle"]
-    # else:
-    #     wbt_bi = 0
-    # if "person" in WBT_counter:
-    #     wbt_p = WBT_counter["person"]
-    # else:
-    #     wbt_p = 0
-    # if "motorcycle" in WBT_counter:
-    #     wbt_m = WBT_counter["motorcycle"]
-    # else:
-    #     wbt_m = 0
-
-
-    # # WBL
-
-    # if "car" in WBL_counter:
-    #     wbl_c = WBL_counter["car"]
-    # else:
-    #     wbl_c = 0
-    # if "truck" in WBL_counter:
-    #     wbl_t = WBL_counter["truck"]
-    # else: 
-    #     wbl_t = 0
-    # if "bus" in WBL_counter:
-    #     wbl_bu = WBL_counter["bus"]
-    # else: 
-    #     wbl_bu = 0
-    # if "bicycle" in WBL_counter:
-    #     wbl_bi = WBL_counter["bicycle"]
-    # else:
-    #     wbl_bi = 0
-    # if "person" in WBL_counter:
-    #     wbl_p = WBL_counter["person"]
-    # else:
-    #     wbl_p = 0
-    # if "motorcycle" in WBL_counter:
-    #     wbl_m = WBL_counter["motorcycle"]
-    # else:
-    #     wbl_m = 0
-
-    # if "car" in WBR_counter:
-    #     wbr_c = WBR_counter["car"]
-    # else:
-    #     wbr_c = 0
-    # if "truck" in WBR_counter:
-    #     wbr_t = WBR_counter["truck"]
-    # else: 
-    #     wbr_t = 0
-    # if "bus" in WBR_counter:
-    #     wbr_bu = WBR_counter["bus"]
-    # else: 
-    #     wbr_bu = 0
-    # if "bicycle" in WBR_counter:
-    #     wbr_bi = WBR_counter["bicycle"]
-    # else:
-    #     wbr_bi = 0
-    # if "person" in WBR_counter:
-    #     wbr_p = WBR_counter["person"]
-    # else:
-    #     wbr_p = 0
-    # if "motorcycle" in WBR_counter:
-    #     wbr_m = WBR_counter["motorcycle"]
-    # else:
-    #     wbr_m = 0
-
-
-    # # NBL
-
-    # if "car" in NBL_counter:
-    #     nbl_c = NBL_counter["car"]
-    # else:
-    #     nbl_c = 0
-    # if "truck" in NBL_counter:
-    #     nbl_t = NBL_counter["truck"]
-    # else: 
-    #     nbl_t = 0
-    # if "bus" in NBL_counter:
-    #     nbl_bu = NBL_counter["bus"]
-    # else: 
-    #     nbl_bu = 0
-    # if "bicycle" in NBL_counter:
-    #     nbl_bi = NBL_counter["bicycle"]
-    # else:
-    #     nbl_bi = 0
-    # if "person" in NBL_counter:
-    #     nbl_p = NBL_counter["person"]
-    # else:
-    #     nbl_p = 0
-    # if "motorcycle" in NBL_counter:
-    #     nbl_m = NBL_counter["motorcycle"]
-    # else:
-    #     nbl_m = 0
-
-    # # NBR
-
-    # if "car" in NBR_counter:
-    #     nbr_c = NBR_counter["car"]
-    # else:
-    #     nbr_c = 0
-    # if "truck" in NBR_counter:
-    #     nbr_t = NBR_counter["truck"]
-    # else: 
-    #     nbr_t = 0
-    # if "bus" in NBR_counter:
-    #     nbr_bu = NBR_counter["bus"]
-    # else: 
-    #     nbr_bu = 0
-    # if "bicycle" in NBR_counter:
-    #     nbr_bi = NBR_counter["bicycle"]
-    # else:
-    #     nbr_bi = 0
-    # if "person" in NBR_counter:
-    #     nbr_p = NBR_counter["person"]
-    # else:
-    #     nbr_p = 0
-    # if "motorcycle" in NBR_counter:
-    #     nbr_m = NBR_counter["motorcycle"]
-    # else:
-    #     nbr_m = 0
-
-    # if "car" in NBT_counter:
-    #     nbt_c = NBT_counter["car"]
-    # else:
-    #     nbt_c = 0
-    # if "truck" in NBT_counter:
-    #     nbt_t = NBT_counter["truck"]
-    # else: 
-    #     nbt_t = 0
-    # if "bus" in NBT_counter:
-    #     nbt_bu = NBT_counter["bus"]
-    # else: 
-    #     nbt_bu = 0
-    # if "bicycle" in NBT_counter:
-    #     nbt_bi = NBT_counter["bicycle"]
-    # else:
-    #     nbt_bi = 0
-    # if "person" in NBT_counter:
-    #     nbt_p = NBT_counter["person"]
-    # else:
-    #     nbt_p = 0
-    # if "motorcycle" in NBT_counter:
-    #     nbt_m = NBT_counter["motorcycle"]
-    # else:
-    #     nbt_m = 0
-
-
+        for i in classes:
+            if i in all_Counter[direction]:
+                row.append(all_Counter[direction][i])
+            else:
+                row.append(0)
 
     # row = [(frame*(1/30)/60),ebt_c, ebt_bu, ebt_t, ebt_bi, ebt_m, ebt_p, ebr_c, ebr_bu, ebr_t, ebr_bi, ebr_m, ebr_p, ebl_c, ebl_bu, ebl_t, ebl_bi, ebl_m, ebl_p, wbt_c, wbt_bu, wbt_t, wbt_bi, wbt_m, wbt_p, wbl_c, wbl_bu, wbl_t, wbl_bi, wbl_m, wbl_p, wbr_c, wbr_bu, wbr_t, wbr_bi, wbr_m, wbr_p, nbl_c, nbl_bu, nbl_t, nbl_bi, nbl_m, nbl_p, nbr_c, nbr_bu, nbr_t, nbr_bi, nbr_m, nbr_p, nbt_c, nbt_bu, nbt_t, nbt_bi, nbt_m, nbt_p]
     with open(testfile, mode='a', newline='') as file:
@@ -843,7 +612,7 @@ def predict(cfg):
 
 
 if __name__ == "__main__":
-    row = "time_minute,EBT_C,EBT_Bu,EBT_T,EBT_Bi,EBT_M,EBT_P,EBR_C,EBR_Bu,EBR_T,EBR_Bi,EBR_M,EBR_P,EBL_C,EBL_Bu,EBL_T,EBL_Bi,EBL_M,EBL_P,WBT_C,WBT_Bu,WBT_T,WBT_Bi,WBT_M,WBT_P,WBL_C,WBL_Bu,WBL_T,WBL_Bi,WBL_M,WBL_P,WBR_C,WBR_Bu,WBR_T,WBR_Bi,WBR_M,WBR_P,NBL_C,NBL_Bu,NBL_T,NBL_Bi,NBL_M,NBL_P,NBR_C,NBR_Bu,NBR_T,NBR_Bi,NBR_M,NBR_P,NBT_C,NBT_Bu,NBT_T,NBT_Bi,NBT_M,NBT_P"
+    row = "time_minute, EBT_C, EBT_Bu, EBT_T, EBT_Bi, EBT_M, EBT_P, EBL_C, EBL_Bu, EBL_T, EBL_Bi, EBL_M, EBL_P, EBR_C, EBR_Bu, EBR_T, EBR_Bi, EBR_M, EBR_P, WBT_C, WBT_Bu  WBT_T, WBT_Bi, WBT_M, WBT_P, WBL_C, WBL_Bu, WBL_T, WBL_Bi, WBL_M, WBL_P, WBR_C, WBR_Bu, WBR_T, WBR_Bi, WBR_M, WBR_P, WBT_C, WBT_Bu  WBT_T, WBT_Bi, WBT_M, WBT_P, WBL_C, WBL_Bu, WBL_T, WBL_Bi, WBL_M, WBL_P, WBR_C, WBR_Bu, WBR_T, WBR_Bi, WBR_M, WBR_P, NBT_C, NBT_Bu  NBT_T, NBT_Bi, NBT_M, NBT_P, NBL_C, NBL_Bu, NBL_T, NBL_Bi, NBL_M, NBL_P, NBR_C, NBR_Bu, NBR_T, NBR_Bi, NBR_M, NBR_P, SBT_C, SBT_Bu  SBT_T, SBT_Bi, SBT_M, SBT_P, SBL_C, SBL_Bu, SBL_T, SBL_Bi, SBL_M, SBL_P, SBR_C, SBR_Bu, SBR_T, SBR_Bi, SBR_M, SBR_P, TOTAL_NORTH_c, TOTAL_NORTH_bu, TOTAL_NORTH_t, TOTAL_NORTH_bi, TOTAL_NORTH_m, TOTAL_NORTH_p, TOTAL_SOUTH_c, TOTAL_SOUTH_bu, TOTAL_SOUTH_t, TOTAL_SOUTH_bi, TOTAL_SOUTH_m, TOTAL_SOUTH_p, TOTAL_WEST_c, TOTAL_WEST_bu, TOTAL_WEST_t, TOTAL_WEST_bi, TOTAL_WEST_m, TOTAL_WEST_p,TOTAL_EAST_c, TOTAL_EAST_bu, TOTAL_EAST_t, TOTAL_EAST_bi, TOTAL_EAST_m, TOTAL_EAST_p"
     row = row.split(',')
     testfile = sys.argv[2][7:-4]+".csv"
     with open(testfile, mode='w', newline='') as file:
