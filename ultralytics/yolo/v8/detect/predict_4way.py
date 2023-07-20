@@ -490,9 +490,6 @@ def draw_boxes(frame, img, bbox, names,object_id, identities=None, offset=(0, 0)
 
         for key in NBT_counter:
             NBT_counter[key] = 0
-
-    # elif(frame >= 15910):
-    #     write_to_csv(frame)
     
     return img
 
@@ -579,8 +576,8 @@ def write_to_csv(frame):
     directions = ["North", "South", "West", "East"]
     routes = [EBT_counter, EBL_counter, EBR_counter, WBT_counter, WBL_counter, WBR_counter, NBT_counter, NBL_counter, NBR_counter, SBT_counter, SBL_counter, SBR_counter]
     row = [(frame*(1/30)/60)]
-    for route in routes:
-        for i in classes:
+    for route in routes:# EBT_counter ...
+        for i in classes: # Frame 1 
             if i in route:
                 row.append(route[i])
             else:
@@ -612,7 +609,24 @@ def predict(cfg):
 
 
 if __name__ == "__main__":
-    row = "time_minute, EBT_C, EBT_Bu, EBT_T, EBT_Bi, EBT_M, EBT_P, EBL_C, EBL_Bu, EBL_T, EBL_Bi, EBL_M, EBL_P, EBR_C, EBR_Bu, EBR_T, EBR_Bi, EBR_M, EBR_P, WBT_C, WBT_Bu  WBT_T, WBT_Bi, WBT_M, WBT_P, WBL_C, WBL_Bu, WBL_T, WBL_Bi, WBL_M, WBL_P, WBR_C, WBR_Bu, WBR_T, WBR_Bi, WBR_M, WBR_P, WBT_C, WBT_Bu  WBT_T, WBT_Bi, WBT_M, WBT_P, WBL_C, WBL_Bu, WBL_T, WBL_Bi, WBL_M, WBL_P, WBR_C, WBR_Bu, WBR_T, WBR_Bi, WBR_M, WBR_P, NBT_C, NBT_Bu  NBT_T, NBT_Bi, NBT_M, NBT_P, NBL_C, NBL_Bu, NBL_T, NBL_Bi, NBL_M, NBL_P, NBR_C, NBR_Bu, NBR_T, NBR_Bi, NBR_M, NBR_P, SBT_C, SBT_Bu  SBT_T, SBT_Bi, SBT_M, SBT_P, SBL_C, SBL_Bu, SBL_T, SBL_Bi, SBL_M, SBL_P, SBR_C, SBR_Bu, SBR_T, SBR_Bi, SBR_M, SBR_P, TOTAL_NORTH_c, TOTAL_NORTH_bu, TOTAL_NORTH_t, TOTAL_NORTH_bi, TOTAL_NORTH_m, TOTAL_NORTH_p, TOTAL_SOUTH_c, TOTAL_SOUTH_bu, TOTAL_SOUTH_t, TOTAL_SOUTH_bi, TOTAL_SOUTH_m, TOTAL_SOUTH_p, TOTAL_WEST_c, TOTAL_WEST_bu, TOTAL_WEST_t, TOTAL_WEST_bi, TOTAL_WEST_m, TOTAL_WEST_p,TOTAL_EAST_c, TOTAL_EAST_bu, TOTAL_EAST_t, TOTAL_EAST_bi, TOTAL_EAST_m, TOTAL_EAST_p"
+    row = "time_minute, EBT_C, EBT_Bu, EBT_T, EBT_Bi, EBT_M, EBT_P, \
+EBL_C, EBL_Bu, EBL_T, EBL_Bi, EBL_M, EBL_P, \
+EBR_C, EBR_Bu, EBR_T, EBR_Bi, EBR_M, EBR_P, \
+WBT_C, WBT_Bu, WBT_T, WBT_Bi, WBT_M, WBT_P, \
+WBL_C, WBL_Bu, WBL_T, WBL_Bi, WBL_M, WBL_P, \
+WBR_C, WBR_Bu, WBR_T, WBR_Bi, WBR_M, WBR_P, \
+NBT_C, NBT_Bu, NBT_T, NBT_Bi, NBT_M, NBT_P, \
+NBL_C, NBL_Bu, NBL_T, NBL_Bi, NBL_M, NBL_P, \
+NBR_C, NBR_Bu, NBR_T, NBR_Bi, NBR_M, NBR_P, \
+SBT_C, SBT_Bu, SBT_T, SBT_Bi, SBT_M, SBT_P, \
+SBL_C, SBL_Bu, SBL_T, SBL_Bi, SBL_M, SBL_P, \
+SBR_C, SBR_Bu, SBR_T, SBR_Bi, SBR_M, SBR_P, \
+TOTAL_NORTH_c, TOTAL_NORTH_bu, TOTAL_NORTH_t, TOTAL_NORTH_bi, TOTAL_NORTH_m, TOTAL_NORTH_p, \
+TOTAL_SOUTH_c, TOTAL_SOUTH_bu, TOTAL_SOUTH_t, TOTAL_SOUTH_bi, TOTAL_SOUTH_m, TOTAL_SOUTH_p, \
+TOTAL_WEST_c, TOTAL_WEST_bu, TOTAL_WEST_t, TOTAL_WEST_bi, TOTAL_WEST_m, TOTAL_WEST_p, \
+TOTAL_EAST_c, TOTAL_EAST_bu, TOTAL_EAST_t, TOTAL_EAST_bi, TOTAL_EAST_m, TOTAL_EAST_p"
+
+
     row = row.split(',')
     testfile = sys.argv[2][7:-4]+".csv"
     with open(testfile, mode='w', newline='') as file:
@@ -620,3 +634,14 @@ if __name__ == "__main__":
         writer.writerow(row)
     predict()
     # write_to_csv()
+
+
+
+# best way to store per minute information
+# NBT
+# car: 
+# bus: 
+# truck:
+# bicycle:
+# motorcycle:
+# person: 
