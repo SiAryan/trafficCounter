@@ -1,5 +1,3 @@
-# Ultralytics YOLO 🚀, GPL-3.0 license
-
 import hydra
 import torch
 import argparse
@@ -23,52 +21,196 @@ import numpy as np
 import pandas as pd
 
 palette = (2 ** 11 - 1, 2 ** 15 - 1, 2 ** 20 - 1)
+
 data_deque = {}
 
 deepsort = None
 
+
+
+west_line = [(188, 355), (560, 703)]
+east_line = [(792,332), (1276,455)]
+south_line = [(808,580), (1277, 453)]
+north_line = [(0,0), (0,0)]
+
+
+
+
+#############################################
 # eastbound
 EBT_counter = {}
 # westbount 
 EBR_counter = {}
+
+EBL_counter = {}
 # entering parkage
 WBT_counter = {}
 # leaving parkade
 WBL_counter = {}
 
+WBR_counter = {}
+
 NBL_counter = {}
 # leaving parkade
 NBR_counter = {}
 
+NBT_counter = {}
+
 ALL_counter = {}
 
-out_path = "output.csv"
+SBR_counter = {}
+
+SBL_counter = {}
+
+SBT_counter = {}
+
+
 
 initial_direction = {
-    'EB': [],
-    'EB_frame': [],
-    'NB': [],
-    'NB_frame': [],
-    'WB': [],
-    'WB_frame': []
+    "South": [],
+    "North": [],
+    "East": [],
+    "West": []
 }
 
-final_direction = {
-    'EBT': [],
-    'EBR': [],
-    'WBT': [],
-    'WBL': [],
-    'NBL': [],
-    'NBR': [],
+all_Counter = {
+    "South": {},
+    "North": {},
+    "East": {},
+    "West": {}
 }
+
+line = [west_line, east_line, south_line, north_line] 
 
 testfile = None
 
-# lines for west entrance:
-line = [[(580,1070), (1613,1975)], [(1884,1005), (3830,1360)], [(2550, 1720), (3831, 1341)]] 
+def check_route(id, direction, data_deque_item, img, obj_name):
+        # NORTHLINE
+        # print(self.id ,self.direction_enter, self.direction_leave)
+        if intersect(data_deque_item[0], data_deque_item[1], north_line[0], north_line[1]):
+            cv2.line(img, north_line[0], north_line[1], (255, 255, 255), 3)
+            if "South" in direction:
+                # self.direction_enter = "North"
+                initial_direction["North"].append(id)
+            elif "North" in direction:
+                # self.direction_leave = "North"
+                
+                if obj_name not in all_Counter["North"]:
+                    all_Counter["North"][obj_name] = 1
+                else:
+                    all_Counter["North"][obj_name] += 1
+                # # check initial direction
+                if id in initial_direction["South"]:
+                    if obj_name not in NBT_counter:
+                        NBT_counter[obj_name] = 1
+                    else:
+                        NBT_counter[obj_name] += 1
+                elif id in initial_direction["East"]:
+                    if obj_name not in EBL_counter:
+                        EBL_counter[obj_name] = 1
+                    else:
+                        EBL_counter[obj_name] += 1
+                elif id in initial_direction["West"]:
+                    if obj_name not in WBR_counter:
+                        WBR_counter[obj_name] = 1
+                    else:
+                        WBR_counter[obj_name] += 1
 
-# make a 4 directional line array 
-# line = [[(580,1070), (1613,1975)], [(1884,1005), (3730,1163)], [(2300, 1500), (3170, 1224)]] 
+                # print(all_Counter["North"])
+
+        if intersect(data_deque_item[0], data_deque_item[1], south_line[0], south_line[1]):
+               
+                cv2.line(img, south_line[0], south_line[1], (255, 255, 255), 3)
+                if "North" in direction:
+                    # self.direction_enter = "South"
+                    initial_direction["South"].append(id)
+                elif "South" in direction:
+                    # self.direction_leave = "South"
+                    
+                    if obj_name not in all_Counter["South"]:
+                        all_Counter["South"][obj_name] = 1
+                    else:
+                        all_Counter["South"][obj_name] += 1
+                    # # check initial direction
+                    if id in initial_direction["North"]:
+                        # print("found route")
+                        if obj_name not in SBT_counter:
+                            SBT_counter[obj_name] = 1
+                        else:
+                            SBT_counter[obj_name] += 1
+                    elif id in initial_direction["East"]:
+                        if obj_name not in EBR_counter:
+                            EBR_counter[obj_name] = 1
+                        else:
+                            EBR_counter[obj_name] += 1
+                    elif id in initial_direction["West"]:
+                        if obj_name not in WBL_counter:
+                            WBL_counter[obj_name] = 1
+                        else:
+                            WBL_counter[obj_name] += 1
+                # print(all_Counter["South"])
+
+        if intersect(data_deque_item[0], data_deque_item[1], west_line[0], west_line[1]):
+            cv2.line(img, west_line[0], west_line[1], (255, 255, 255), 3)
+            if "East" in direction:
+                # self.direction_enter = "West"
+                initial_direction["West"].append(id)
+            elif "West" in direction:
+                # self.direction_leave = "Wast"
+                
+                if obj_name not in all_Counter["West"]:
+                    all_Counter["West"][obj_name] = 1
+                else:
+                    all_Counter["West"][obj_name] += 1
+                # # check initial direction
+                if id in initial_direction["East"]:
+                    # print("found route")
+                    if obj_name not in WBT_counter:
+                        WBT_counter[obj_name] = 1
+                    else:
+                        WBT_counter[obj_name] += 1
+                elif id in initial_direction["North"]:
+                    if obj_name not in SBR_counter:
+                        SBR_counter[obj_name] = 1
+                    else:
+                        SBR_counter[obj_name] += 1
+                elif id in initial_direction["South"]:
+                    if obj_name not in NBL_counter:
+                        NBL_counter[obj_name] = 1
+                    else:
+                        NBL_counter[obj_name] += 1
+
+        if intersect(data_deque_item[0], data_deque_item[1], east_line[0], east_line[1]):
+            cv2.line(img, east_line[0], east_line[1], (255, 255, 255), 3)
+            if "West" in direction:
+                # self.direction_enter = "East"
+                initial_direction["East"].append(id)
+            elif "East" in direction:
+                # self.direction_leave = "East"
+                
+                if obj_name not in all_Counter["East"]:
+                    all_Counter["East"][obj_name] = 1
+                else:
+                    all_Counter["East"][obj_name] += 1
+                # # check initial direction
+                if id in initial_direction["West"]:
+                    # print("found route")
+                    if obj_name not in EBT_counter:
+                        EBT_counter[obj_name] = 1
+                    else:
+                        EBT_counter[obj_name] += 1
+                elif id in initial_direction["South"]:
+                    if obj_name not in NBR_counter:
+                        NBR_counter[obj_name] = 1
+                    else:
+                        NBR_counter[obj_name] += 1
+                elif id in initial_direction["North"]:
+                    if obj_name not in SBL_counter:
+                        SBL_counter[obj_name] = 1
+                    else:
+                        SBL_counter[obj_name] += 1
+
+        return
 
 def init_tracker():
     # intialize tracker
@@ -81,7 +223,7 @@ def init_tracker():
                             nms_max_overlap=cfg_deep.DEEPSORT.NMS_MAX_OVERLAP, max_iou_distance=cfg_deep.DEEPSORT.MAX_IOU_DISTANCE,
                             max_age=cfg_deep.DEEPSORT.MAX_AGE, n_init=cfg_deep.DEEPSORT.N_INIT, nn_budget=cfg_deep.DEEPSORT.NN_BUDGET,
                             use_cuda=True)
-##########################################################################################
+
 def xyxy_to_xywh(*xyxy):
     """"
         Calculates the relative bounding box from absolute pixel values.
@@ -222,6 +364,7 @@ def get_direction(point1, point2):
     return direction_str
 
 
+
 def draw_boxes(frame, img, bbox, names,object_id, identities=None, offset=(0, 0)):
     """
         draw the boxes on objects in the queue. 
@@ -256,84 +399,16 @@ def draw_boxes(frame, img, bbox, names,object_id, identities=None, offset=(0, 0)
         obj_name = names[object_id[i]]
         label = '{}{:d}'.format("", id) + ":"+ '%s' % (obj_name)
 
+
         # add center to buffer
         data_deque[id].appendleft(center)
+
         if len(data_deque[id]) >= 2:
+
             direction = get_direction(data_deque[id][0], data_deque[id][1])
+            check_route(id,direction, data_deque[id], img, obj_name)
             # do this per item in data queue
-            # if item is eastbound
-            if intersect(data_deque[id][0], data_deque[id][1], line[0][0], line[0][1]):
-                cv2.line(img, line[0][0], line[0][1], (255, 255, 255), 3)
-                if "North" in direction and "East" in direction:
-                    initial_direction['EB'].append(id)
-                    initial_direction['EB_frame'].append(int(frame/30))
-                elif "South" in direction and "West" in direction:
-                    if id in initial_direction['WB']:
-                        # EB
-                        initial_direction['WB'].pop(initial_direction['WB'].index(id))
-                        final_direction['WBT'].append(id)
-                        if obj_name not in WBT_counter:
-                            WBT_counter[obj_name] = 1
-                        else:
-                            WBT_counter[obj_name] += 1
-                    elif id in initial_direction['NB']:
-                        # NB
-                        initial_direction['NB'].pop(initial_direction['NB'].index(id))
-                        final_direction['NBL'].append(id)   
-                        if obj_name not in NBL_counter:
-                            NBL_counter[obj_name] = 1
-                        else:
-                            NBL_counter[obj_name] += 1
 
-
-            if intersect(data_deque[id][0], data_deque[id][1], line[1][0], line[1][1]):
-                cv2.line(img, line[1][0], line[1][1], (255, 255, 255), 3)
-                if "South" in direction and "West" in direction:
-                    initial_direction['WB'].append(id)
-                    initial_direction['WB_frame'].append(frame)
-                elif "North" in direction and "East" in direction:
-                    if id in initial_direction['EB']:
-                        # EB
-                        initial_direction['EB'].pop(initial_direction['EB'].index(id))
-                        final_direction['EBT'].append(id)
-                        if obj_name not in EBT_counter:
-                            EBT_counter[obj_name] = 1
-                        else:
-                            EBT_counter[obj_name] += 1
-                    elif id in initial_direction['NB']:
-                        # NB
-                        initial_direction['NB'].pop(initial_direction['NB'].index(id))
-                        final_direction['NBR'].append(id)  
-                        if obj_name not in NBR_counter:
-                            NBR_counter[obj_name] = 1
-                        else:
-                            NBR_counter[obj_name] += 1 
-
-            if intersect(data_deque[id][0], data_deque[id][1], line[2][0], line[2][1]):
-                cv2.line(img, line[2][0], line[2][1], (255, 255, 255), 3)
-                if "North" in direction and "West" in direction:
-                    initial_direction['NB'].append(id)
-                    initial_direction['NB_frame'].append(frame)
-                elif "South" in direction and "East" in direction:
-                    if id in initial_direction['EB']:
-                        # EB
-                        initial_direction['EB'].pop(initial_direction['EB'].index(id))
-                        final_direction['EBR'].append(id)
-                        if obj_name not in EBR_counter:
-                            EBR_counter[obj_name] = 1
-                        else:
-                            EBR_counter[obj_name] += 1
-                    elif id in initial_direction['WB']:
-                        # NB
-                        initial_direction['WB'].pop(initial_direction['WB'].index(id))
-                        final_direction['WBL'].append(id)   
-                        if obj_name not in WBL_counter:
-                            WBL_counter[obj_name] = 1
-                        else:
-                            WBL_counter[obj_name] += 1
-
-
-        
         UI_box(box, img, label=label, color=color, line_thickness=2)
         # draw trail
         for i in range(1, len(data_deque[id])):
@@ -343,26 +418,49 @@ def draw_boxes(frame, img, bbox, names,object_id, identities=None, offset=(0, 0)
             # generate dynamic thickness of trails
             thickness = int(np.sqrt(64 / float(i + i)) * 1.5)
             # draw trails
-            # cv2.line(img, data_deque[id][i - 1], data_deque[id][i], color, thickness)
-
-        #add to output 
-
-        """
-            object counter tracks: objects headed south west 
-            object counter 1 tracks: objects headed north east
-            object counter 2 tracks objects headed south east
-            object counter 3 tracks objects headed north west
-        """
-
-
+            cv2.line(img, data_deque[id][i - 1], data_deque[id][i], color, thickness)
 
     #4. Display Count in top right corner
-        # for idx, (key, value) in enumerate(object_counter1.items()):
-        #     cnt_str = str(key) + ":" +str(value)
-        #     cv2.line(img, (width - 500,25), (width,25), [85,45,255], 40)
-        #     cv2.putText(img, f'Number of Vehicles Entering', (width - 500, 35), 0, 1, [225, 255, 255], thickness=2, lineType=cv2.LINE_AA)
-        #     cv2.line(img, (width - 150, 65 + (idx*40)), (width, 65 + (idx*40)), [85, 45, 255], 30)
-        #     cv2.putText(img, cnt_str, (width - 150, 75 + (idx*40)), 0, 1, [255, 255, 255], thickness = 2, lineType = cv2.LINE_AA)
+    east_bound_through = 0
+    east_bound_right = 0
+    west_bound_left = 0
+    west_bound_through = 0
+    north_bound_right = 0
+    north_bound_left = 0
+
+    for idx, (key, value) in enumerate(EBT_counter.items()):
+        east_bound_through += value
+
+    for idx, (key, value) in enumerate(EBR_counter.items()):
+        east_bound_right += value
+    
+    for idx, (key, value) in enumerate(WBT_counter.items()):
+        west_bound_through += value
+    
+    for idx, (key, value) in enumerate(WBL_counter.items()):
+        west_bound_left += value
+    
+    for idx, (key, value) in enumerate(NBL_counter.items()):
+        north_bound_left += value
+
+    
+    for idx, (key, value) in enumerate(NBR_counter.items()):
+        north_bound_right += value
+
+    counts = { "EBT": east_bound_through,
+                "EBR": east_bound_right,
+                "WBT": west_bound_through,
+                "WBL": west_bound_left,
+                "NBR": north_bound_right,
+                "NBL": north_bound_left  
+            }
+
+    for idx, (key, value) in enumerate(counts.items()):
+        cnt_str = str(key) + ":" +str(value)
+        cv2.line(img, (width - 500,25), (width,25), [85,45,255], 40)
+        # cv2.putText(img, f'Number of Vehicles Entering', (width - 500, 35), 0, 1, [225, 255, 255], thickness=2, lineType=cv2.LINE_AA)
+        cv2.line(img, (width - 150, 65 + (idx*40)), (width, 65 + (idx*40)), [85, 45, 255], 30)
+        cv2.putText(img, cnt_str, (width - 150, 75 + (idx*40)), 0, 1, [255, 255, 255], thickness = 2, lineType = cv2.LINE_AA)
 
         # for idx, (key, value) in enumerate(object_counter.items()):
         #     cnt_str1 = str(key) + ":" +str(value)
@@ -379,32 +477,53 @@ def draw_boxes(frame, img, bbox, names,object_id, identities=None, offset=(0, 0)
         #     cv2.line(img, (20,65+ (idx*40)), (127,65+ (idx*40)), [85,45,255], 30)
         #     cv2.putText(img, cnt_str1, (11, 75+ (idx*40)), 0, 1, [225, 255, 255], thickness=2, lineType=cv2.LINE_AA)
 
-        
-                
+
+    print(all_Counter)
+    print([
+        EBT_counter,
+        EBL_counter,
+        EBR_counter,
+        WBT_counter,
+        WBL_counter,
+        WBR_counter,
+        NBT_counter,
+        NBL_counter,
+        NBR_counter,
+        SBT_counter,
+        SBL_counter,
+        SBR_counter
+    ])
+
     if (frame%(1800) == 0):
         write_to_csv(frame)
         
-        for key in EBT_counter:
-            EBT_counter[key] = 0
         
-        for key in EBR_counter:
-            EBT_counter[key] = 0
+        # for key in EBT_counter:
+        #     EBT_counter[key] = 0
         
-        for key in WBT_counter:
-            WBT_counter[key] = 0
+        # for key in EBR_counter:
+        #     EBR_counter[key] = 0
+        
+        # for key in EBL_counter:
+        #     EBL_counter[key] = 0
 
-        for key in WBL_counter:
-            WBL_counter[key] = 0
+        # for key in WBT_counter:
+        #     WBT_counter[key] = 0
 
-        for key in NBL_counter:
-            NBL_counter[key] = 0
+        # for key in WBL_counter:
+        #     WBL_counter[key] = 0
+        
+        # for key in WBR_counter:
+        #     WBR_counter[key] = 0
 
-        for key in NBR_counter:
-            NBR_counter[key] = 0
+        # for key in NBL_counter:
+        #     NBL_counter[key] = 0
 
+        # for key in NBR_counter:
+        #     NBR_counter[key] = 0
 
-    # elif(frame >= 15910):
-    #     write_to_csv(frame)
+        # for key in NBT_counter:
+        #     NBT_counter[key] = 0
     
     return img
 
@@ -487,186 +606,31 @@ class DetectionPredictor(BasePredictor):
     
 def write_to_csv(frame):
     # testfile = "test.csv"
-    delimiter_line = [('minute: %s' + '-' * 50)%(frame*(1/30)/60)]
-    delimiter_line2 = [('-' * 60)]
-    
+    classes = ["car", "bus", "truck", "bicycle", "motorcycle", "person"]
+    directions = ["North", "South", "West", "East"]
+    routes = [EBT_counter, EBL_counter, EBR_counter, WBT_counter, WBL_counter, WBR_counter, NBT_counter, NBL_counter, NBR_counter, SBT_counter, SBL_counter, SBR_counter]
+    row = [(frame*(1/30)/60)]
+    for route in routes:# EBT_counter ...
+        for i in classes: # Frame 1 
+            if i in route:
+                row.append(route[i])
+            else:
+                row.append(0)
+        
+    for direction in directions:
 
+        for i in classes:
+            if i in all_Counter[direction]:
+                row.append(all_Counter[direction][i])
+            else:
+                row.append(0)
 
-
-    # EBT
-
-    if "car" in EBT_counter:
-        ebt_c = EBT_counter["car"]
-    else:
-        ebt_c = 0
-    if "truck" in EBT_counter:
-        ebt_t = EBT_counter["truck"]
-    else: 
-        ebt_t = 0
-    if "bus" in EBT_counter:
-        ebt_bu = EBT_counter["bus"]
-    else: 
-        ebt_bu = 0
-    if "bicycle" in EBT_counter:
-        ebt_bi = EBT_counter["bicycle"]
-    else:
-        ebt_bi = 0
-    if "person" in EBT_counter:
-        ebt_p = EBT_counter["person"]
-    else:
-        ebt_p = 0
-    if "motorcycle" in EBT_counter:
-        ebt_m = EBT_counter["motorcycle"]
-    else:
-        ebt_m = 0 
-    
-    # EBR
-    if "car" in EBR_counter:
-        ebr_c = EBR_counter["car"]
-    else:
-        ebr_c = 0
-    if "truck" in EBR_counter:
-        ebr_t = EBR_counter["truck"]
-    else: 
-        ebr_t = 0
-    if "bus" in EBR_counter:
-        ebr_bu = EBR_counter["bus"]
-    else: 
-        ebr_bu = 0
-    if "bicycle" in EBR_counter:
-        ebr_bi = EBR_counter["bicycle"]
-    else:
-        ebr_bi = 0
-    if "person" in EBR_counter:
-        ebr_p = EBR_counter["person"]
-    else:
-        ebr_p = 0
-    if "motorcycle" in EBR_counter:
-        ebr_m = EBR_counter["motorcycle"]
-    else:
-        ebr_m = 0
-
-    # WBT
-
-    if "car" in WBT_counter:
-        wbt_c = WBT_counter["car"]
-    else:
-        wbt_c = 0
-    if "truck" in WBT_counter:
-        wbt_t = WBT_counter["truck"]
-    else: 
-        wbt_t = 0
-    if "bus" in WBT_counter:
-        wbt_bu = WBT_counter["bus"]
-    else: 
-        wbt_bu = 0
-    if "bicycle" in WBT_counter:
-        wbt_bi = WBT_counter["bicycle"]
-    else:
-        wbt_bi = 0
-    if "person" in WBT_counter:
-        wbt_p = WBT_counter["person"]
-    else:
-        wbt_p = 0
-    if "motorcycle" in WBT_counter:
-        wbt_m = WBT_counter["motorcycle"]
-    else:
-        wbt_m = 0
-
-
-    # WBL
-
-    if "car" in WBL_counter:
-        wbl_c = WBL_counter["car"]
-    else:
-        wbl_c = 0
-    if "truck" in WBL_counter:
-        wbl_t = WBL_counter["truck"]
-    else: 
-        wbl_t = 0
-    if "bus" in WBL_counter:
-        wbl_bu = WBL_counter["bus"]
-    else: 
-        wbl_bu = 0
-    if "bicycle" in WBL_counter:
-        wbl_bi = WBL_counter["bicycle"]
-    else:
-        wbl_bi = 0
-    if "person" in WBL_counter:
-        wbl_p = WBL_counter["person"]
-    else:
-        wbl_p = 0
-    if "motorcycle" in WBL_counter:
-        wbl_m = WBL_counter["motorcycle"]
-    else:
-        wbl_m = 0
-
-
-    # NBL
-
-    if "car" in NBL_counter:
-        nbl_c = NBL_counter["car"]
-    else:
-        nbl_c = 0
-    if "truck" in NBL_counter:
-        nbl_t = NBL_counter["truck"]
-    else: 
-        nbl_t = 0
-    if "bus" in NBL_counter:
-        nbl_bu = NBL_counter["bus"]
-    else: 
-        nbl_bu = 0
-    if "bicycle" in NBL_counter:
-        nbl_bi = NBL_counter["bicycle"]
-    else:
-        nbl_bi = 0
-    if "person" in NBL_counter:
-        nbl_p = NBL_counter["person"]
-    else:
-        nbl_p = 0
-    if "motorcycle" in NBL_counter:
-        nbl_m = NBL_counter["motorcycle"]
-    else:
-        nbl_m = 0
-
-    # NBR
-
-    if "car" in NBR_counter:
-        nbr_c = NBR_counter["car"]
-    else:
-        nbr_c = 0
-    if "truck" in NBR_counter:
-        nbr_t = NBR_counter["truck"]
-    else: 
-        nbr_t = 0
-    if "bus" in NBR_counter:
-        nbr_bu = NBR_counter["bus"]
-    else: 
-        nbr_bu = 0
-    if "bicycle" in NBR_counter:
-        nbr_bi = NBR_counter["bicycle"]
-    else:
-        nbr_bi = 0
-    if "person" in NBR_counter:
-        nbr_p = NBR_counter["person"]
-    else:
-        nbr_p = 0
-    if "motorcycle" in NBR_counter:
-        nbr_m = NBR_counter["motorcycle"]
-    else:
-        nbr_m = 0
-
-
-
-    row = [(frame*(1/30)/60),ebt_c, ebt_bu, ebt_t, ebt_bi, ebt_m, ebt_p, ebr_c, ebr_bu, ebr_t, ebr_bi, ebr_m, ebr_p, wbt_c, wbt_bu, wbt_t, wbt_bi, wbt_m, wbt_p, wbl_c, wbl_bu, wbl_t, wbl_bi, wbl_m, wbl_p, nbl_c, nbl_bu, nbl_t, nbl_bi, nbl_m, nbl_p, nbr_c, nbr_bu, nbr_t, nbr_bi, nbr_m, nbr_p]
+    # row = [(frame*(1/30)/60),ebt_c, ebt_bu, ebt_t, ebt_bi, ebt_m, ebt_p, ebr_c, ebr_bu, ebr_t, ebr_bi, ebr_m, ebr_p, ebl_c, ebl_bu, ebl_t, ebl_bi, ebl_m, ebl_p, wbt_c, wbt_bu, wbt_t, wbt_bi, wbt_m, wbt_p, wbl_c, wbl_bu, wbl_t, wbl_bi, wbl_m, wbl_p, wbr_c, wbr_bu, wbr_t, wbr_bi, wbr_m, wbr_p, nbl_c, nbl_bu, nbl_t, nbl_bi, nbl_m, nbl_p, nbr_c, nbr_bu, nbr_t, nbr_bi, nbr_m, nbr_p, nbt_c, nbt_bu, nbt_t, nbt_bi, nbt_m, nbt_p]
     with open(testfile, mode='a', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(row)
 
-
-
     return
-
 
 @hydra.main(version_base=None, config_path=str(DEFAULT_CONFIG.parent), config_name=DEFAULT_CONFIG.name)
 def predict(cfg):
@@ -679,7 +643,24 @@ def predict(cfg):
 
 
 if __name__ == "__main__":
-    row = "time_minute,EBT_C,EBT_Bu,EBT_T,EBT_Bi,EBT_M,EBT_P,EBR_C,EBR_Bu,EBR_T,EBR_Bi,EBR_M,EBR_P,WBT_C,WBT_Bu,WBT_T,WBT_Bi,WBT_M,WBT_P,WBL_C,WBL_Bu,WBL_T,WBL_Bi,WBL_M,WBL_P,NBL_C,NBL_Bu,NBL_T,NBL_Bi,NBL_M,NBL_P,NBR_C,NBR_Bu,NBR_T,NBR_Bi,NBR_M,NBR_P"
+    row = "time_minute, EBT_C, EBT_Bu, EBT_T, EBT_Bi, EBT_M, EBT_P, \
+EBL_C, EBL_Bu, EBL_T, EBL_Bi, EBL_M, EBL_P, \
+EBR_C, EBR_Bu, EBR_T, EBR_Bi, EBR_M, EBR_P, \
+WBT_C, WBT_Bu, WBT_T, WBT_Bi, WBT_M, WBT_P, \
+WBL_C, WBL_Bu, WBL_T, WBL_Bi, WBL_M, WBL_P, \
+WBR_C, WBR_Bu, WBR_T, WBR_Bi, WBR_M, WBR_P, \
+NBT_C, NBT_Bu, NBT_T, NBT_Bi, NBT_M, NBT_P, \
+NBL_C, NBL_Bu, NBL_T, NBL_Bi, NBL_M, NBL_P, \
+NBR_C, NBR_Bu, NBR_T, NBR_Bi, NBR_M, NBR_P, \
+SBT_C, SBT_Bu, SBT_T, SBT_Bi, SBT_M, SBT_P, \
+SBL_C, SBL_Bu, SBL_T, SBL_Bi, SBL_M, SBL_P, \
+SBR_C, SBR_Bu, SBR_T, SBR_Bi, SBR_M, SBR_P, \
+TOTAL_NORTH_c, TOTAL_NORTH_bu, TOTAL_NORTH_t, TOTAL_NORTH_bi, TOTAL_NORTH_m, TOTAL_NORTH_p, \
+TOTAL_SOUTH_c, TOTAL_SOUTH_bu, TOTAL_SOUTH_t, TOTAL_SOUTH_bi, TOTAL_SOUTH_m, TOTAL_SOUTH_p, \
+TOTAL_WEST_c, TOTAL_WEST_bu, TOTAL_WEST_t, TOTAL_WEST_bi, TOTAL_WEST_m, TOTAL_WEST_p, \
+TOTAL_EAST_c, TOTAL_EAST_bu, TOTAL_EAST_t, TOTAL_EAST_bi, TOTAL_EAST_m, TOTAL_EAST_p"
+
+
     row = row.split(',')
     testfile = sys.argv[2][7:-4]+".csv"
     with open(testfile, mode='w', newline='') as file:
@@ -687,3 +668,14 @@ if __name__ == "__main__":
         writer.writerow(row)
     predict()
     # write_to_csv()
+
+
+
+# best way to store per minute information
+# NBT
+# car: 
+# bus: 
+# truck:
+# bicycle:
+# motorcycle:
+# person: 
