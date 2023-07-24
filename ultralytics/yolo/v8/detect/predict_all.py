@@ -457,7 +457,7 @@ def draw_boxes(frame, img, bbox, names,object_id, identities=None, offset=(0, 0)
 
     for idx, (key, value) in enumerate(counts.items()):
         cnt_str = str(key) + ":" +str(value)
-        cv2.line(img, (width - 500,25), (width,25), [85,45,255], 40)
+        # cv2.line(img, (width - 500,25), (width,25), [85,45,255], 40)
         # cv2.putText(img, f'Number of Vehicles Entering', (width - 500, 35), 0, 1, [225, 255, 255], thickness=2, lineType=cv2.LINE_AA)
         cv2.line(img, (width - 150, 65 + (idx*40)), (width, 65 + (idx*40)), [85, 45, 255], 30)
         cv2.putText(img, cnt_str, (width - 150, 75 + (idx*40)), 0, 1, [255, 255, 255], thickness = 2, lineType = cv2.LINE_AA)
