@@ -498,32 +498,32 @@ def draw_boxes(frame, img, bbox, names,object_id, identities=None, offset=(0, 0)
         write_to_csv(frame)
         
         
-        # for key in EBT_counter:
-        #     EBT_counter[key] = 0
+        for key in EBT_counter:
+            EBT_counter[key] = 0
         
-        # for key in EBR_counter:
-        #     EBR_counter[key] = 0
+        for key in EBR_counter:
+            EBR_counter[key] = 0
         
-        # for key in EBL_counter:
-        #     EBL_counter[key] = 0
+        for key in EBL_counter:
+            EBL_counter[key] = 0
 
-        # for key in WBT_counter:
-        #     WBT_counter[key] = 0
+        for key in WBT_counter:
+            WBT_counter[key] = 0
 
-        # for key in WBL_counter:
-        #     WBL_counter[key] = 0
+        for key in WBL_counter:
+            WBL_counter[key] = 0
         
-        # for key in WBR_counter:
-        #     WBR_counter[key] = 0
+        for key in WBR_counter:
+            WBR_counter[key] = 0
 
-        # for key in NBL_counter:
-        #     NBL_counter[key] = 0
+        for key in NBL_counter:
+            NBL_counter[key] = 0
 
-        # for key in NBR_counter:
-        #     NBR_counter[key] = 0
+        for key in NBR_counter:
+            NBR_counter[key] = 0
 
-        # for key in NBT_counter:
-        #     NBT_counter[key] = 0
+        for key in NBT_counter:
+            NBT_counter[key] = 0
     
     return img
 
