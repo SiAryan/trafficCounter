@@ -547,14 +547,23 @@ def draw_boxes(frame, img, bbox, names,object_id, identities=None, offset=(0, 0)
         for key in WBR_counter:
             WBR_counter[key] = 0
 
+        for key in NBT_counter:
+            NBT_counter[key] = 0
+
         for key in NBL_counter:
             NBL_counter[key] = 0
 
         for key in NBR_counter:
             NBR_counter[key] = 0
 
-        for key in NBT_counter:
-            NBT_counter[key] = 0
+        for key in SBT_counter:
+            SBT_counter[key] = 0
+
+        for key in SBL_counter:
+            SBL_counter[key] = 0
+
+        for key in SBR_counter:
+            SBR_counter[key] = 0
     
     return img
 
