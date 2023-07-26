@@ -28,10 +28,10 @@ deepsort = None
 
 
 
-west_line = [(188, 355), (560, 703)]
-east_line = [(792,332), (1276,455)]
-south_line = [(808,580), (1277, 453)]
-north_line = [(0,0), (0,0)]
+west_line = [(169, 468), (135, 569)]
+east_line = [(934,465), (1496,496)]
+south_line = [(1648,491), (380, 745)]
+north_line = [(237,487), (1025,470)]
 
 
 
@@ -427,12 +427,21 @@ def draw_boxes(frame, img, bbox, names,object_id, identities=None, offset=(0, 0)
     west_bound_through = 0
     north_bound_right = 0
     north_bound_left = 0
+    east_bound_left = 0
+    west_bound_right = 0
+    north_bound_through = 0
+    south_bound_through = 0
+    south_bound_left = 0
+    south_bound_right = 0
 
     for idx, (key, value) in enumerate(EBT_counter.items()):
         east_bound_through += value
 
     for idx, (key, value) in enumerate(EBR_counter.items()):
         east_bound_right += value
+
+    for idx, (key, value) in enumerate(EBL_counter.items()):
+        east_bound_left += value
     
     for idx, (key, value) in enumerate(WBT_counter.items()):
         west_bound_through += value
@@ -440,19 +449,40 @@ def draw_boxes(frame, img, bbox, names,object_id, identities=None, offset=(0, 0)
     for idx, (key, value) in enumerate(WBL_counter.items()):
         west_bound_left += value
     
+    for idx, (key, value) in enumerate(WBR_counter.items()):
+        west_bound_right += value
+
+    for idx, (key, value) in enumerate(NBT_counter.items()):
+        north_bound_through += value
+
     for idx, (key, value) in enumerate(NBL_counter.items()):
         north_bound_left += value
 
-    
     for idx, (key, value) in enumerate(NBR_counter.items()):
         north_bound_right += value
 
-    counts = { "EBT": east_bound_through,
+    for idx, (key, value) in enumerate(SBT_counter.items()):
+        south_bound_through += value
+
+    for idx, (key, value) in enumerate(SBL_counter.items()):
+        south_bound_left += value
+
+    for idx, (key, value) in enumerate(SBR_counter.items()):
+        south_bound_right += value
+
+
+    counts = {  "EBT": east_bound_through,
+                "EBL": east_bound_left,
                 "EBR": east_bound_right,
                 "WBT": west_bound_through,
                 "WBL": west_bound_left,
+                "WBR": west_bound_right,
+                "NBT": north_bound_through,
                 "NBR": north_bound_right,
-                "NBL": north_bound_left  
+                "NBL": north_bound_left,  
+                "SBT": south_bound_through,
+                "SBL": south_bound_left,
+                "SBR": south_bound_right
             }
 
     for idx, (key, value) in enumerate(counts.items()):

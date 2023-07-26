@@ -495,6 +495,7 @@ def draw_boxes(frame, img, bbox, names,object_id, identities=None, offset=(0, 0)
 
 
 
+
 class DetectionPredictor(BasePredictor):
 
     def get_annotator(self, img):
@@ -638,10 +639,5 @@ TOTAL_EAST_c, TOTAL_EAST_bu, TOTAL_EAST_t, TOTAL_EAST_bi, TOTAL_EAST_m, TOTAL_EA
 
 
 # best way to store per minute information
-# NBT
-# car: 
-# bus: 
-# truck:
-# bicycle:
-# motorcycle:
-# person: 
+# add all vehicle counts within same column
+#  person passing through line before leaving frame = person approach 
