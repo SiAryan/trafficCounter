@@ -28,10 +28,10 @@ deepsort = None
 
 
 
-west_line = [(169, 468), (135, 569)]
-east_line = [(934,465), (1496,496)]
-south_line = [(1648,491), (380, 745)]
-north_line = [(237,487), (1025,470)]
+west_line = [(770, 1063), (1688, 2071)]
+east_line = [(2190,1010), (3830,1345)]
+south_line = [(2174,1828), (3800, 1343)]
+north_line = [(0,0), (0,0)]
 
 
 
@@ -100,7 +100,7 @@ def check_route(id, direction, data_deque_item, img, obj_name):
                 else:
                     all_Counter["North"][obj_name] += 1
                 # # check initial direction
-                if id in initial_direction["South"]:
+                if id in initial_direction["North"]:
                     if obj_name not in NBT_counter:
                         NBT_counter[obj_name] = 1
                     else:
@@ -138,12 +138,12 @@ def check_route(id, direction, data_deque_item, img, obj_name):
                             SBT_counter[obj_name] = 1
                         else:
                             SBT_counter[obj_name] += 1
-                    elif id in initial_direction["East"]:
+                    elif id in initial_direction["West"]:
                         if obj_name not in EBR_counter:
                             EBR_counter[obj_name] = 1
                         else:
                             EBR_counter[obj_name] += 1
-                    elif id in initial_direction["West"]:
+                    elif id in initial_direction["East"]:
                         if obj_name not in WBL_counter:
                             WBL_counter[obj_name] = 1
                         else:
